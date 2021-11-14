@@ -1,12 +1,12 @@
 {
-  "name": "MagicMirror-Module-Template",
-  "version": "1.2.0",
-  "description": "Module Base template for create new modules for MagicMirror",
-  "main": "MagicMirror-Module-Template.js",
+  "name": "MMM-Mattermost",
+  "version": "1.0.0",
+  "description": "A module for displaying messages in a specific mattermost channel or several depending on keywords",
+  "main": "mattermost.js",
   "scripts": {
     "test": "./node_modules/grunt/bin/grunt"
   },
-  "author": "Rodrigo Ramírez Norambuena",
+  "author": "Mikael Östberg",
   "license": "MIT",
   "devDependencies": {
     "grunt": "latest",
@@ -18,5 +18,8 @@
     "stylelint": "latest",
     "stylelint-config-standard": "latest",
     "time-grunt": "latest"
+  },
+  "dependencies": {
+    "cross-fetch": "^3.1.4"
   }
 }
