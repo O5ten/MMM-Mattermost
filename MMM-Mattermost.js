@@ -13,45 +13,49 @@ Module.register("MMM-Mattermost", {
 	defaults: {
 		animationSpeed: 2000,
 		updateInterval: 60000,
-		rotationInterval: 15000,
+		rotationInterval: 5000,
 		retryDelay: 5000,
 		teamId: "",
 		searchTerms: "",
 		channelId: "",
-		messages: 10
+		limit: 10,
+		title: "Mattermost"
 	},
 
 	currentMessage: undefined,
-	messages: [],
+	posts: undefined,
+	postIds: [],
 	requiresVersion: "2.1.0", 
+	currentMessageIndex: 0,
+
+	rotateMessage: function(){
+		this.currentMessage = this.postIds[this.currentMessageIndex];
+		this.currentMessageIndex = this.currentMessageIndex == this.config.limit ? 0 : this.currentMessageIndex + 1;
+		if(this.postIds.length <= this.currentMessageIndex) {
+			this.currentMessageIndex = 0;
+		}
+		this.updateDom(this.config.animationSpeed);
+	},
+
+	fetchMessages: function(){
+		this.sendSocketNotification("MMM-Mattermost-fetch-messages");
+	},
 
 	start: function() {
-		this.loaded = false;
 		this.sendSocketNotification("MMM-Mattermost-set-config", this.config);
-		let fetchMessages = () => {
-			this.sendSocketNotification("MMM-Mattermost-fetch-messages");
-		}
-		fetchMessages();
-		setInterval(fetchMessages, this.config.updateInterval, 0);
-		let i = 0;
-		setInterval(() => {
-			i = i > this.messages.length ? 0 : i + 1;
-			let limit = this.config.messages < this.messages.length ? this.config.messages : this.messages.length
-			this.currentMessage = this.messages[i % limit];
-			this.updateDom(this.config.animationSpeed);
-		}, this.config.rotationInterval);
+		this.fetchMessages();
+		setInterval(this.fetchMessages.bind(this), this.config.updateInterval);
+		setInterval(this.rotateMessage.bind(this), this.config.rotationInterval);
 	},
 
 	getDom: function() {
 		let wrapper = document.createElement("div");
-		let wrapperDataRequest = document.createElement("div");
 		let labelDataRequest = document.createElement("label");
 		let header = document.createElement("h1");
-		header.innerHTML = "Mattermost";
+		header.innerHTML = this.config.title;
 
-		if(this.messages.length !== 0) {
-			let currentMessage = this.messages.order[0];
-			labelDataRequest.innerHTML = this.messages.posts[currentMessage].message
+		if(this.posts !== undefined) {
+			labelDataRequest.innerHTML = this.posts[this.currentMessage].message
 		} else {
 			labelDataRequest.innerHTML = "No mattermost messages found, try modifying your searchterms";
 		}
@@ -59,18 +63,16 @@ Module.register("MMM-Mattermost", {
 		wrapper.appendChild(header);
 		wrapper.appendChild(labelDataRequest);
 
-		if (this.Messages) {
-			let wrapperMessages = document.createElement("div");
-			wrapperMessages.innerHTML =  this.Messages.date;
-			wrapper.appendChild(wrapperMessages);
-		}
 		return wrapper;
 	},
 
 	socketNotificationReceived: function (notification, payload) {
 		if(notification === "MMM-Mattermost-received-messages") {
-			this.messages = payload;
-			console.log("Received messages from mattermost:" + this.messages.order.length)
+			this.postIds = payload.order.slice(0, this.config.limit-1);
+			this.posts = payload.posts
+			if(!this.currentMessage){
+				this.rotateMessage();
+			}
 			this.updateDom(this.config.animationSpeed);
 		} 
 	}
