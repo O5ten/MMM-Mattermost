@@ -13,7 +13,7 @@ Module.register("MMM-Mattermost", {
 	defaults: {
 		animationSpeed: 2000,
 		updateInterval: 60000,
-		rotationInterval: 5000,
+		rotationInterval: 15000,
 		retryDelay: 5000,
 		teamId: "",
 		searchTerms: "",
