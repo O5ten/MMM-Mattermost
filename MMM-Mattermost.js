@@ -7,8 +7,8 @@
  * MIT Licensed.
  */
 
-//NEXT: Display user with picture :thinking_face:
-
+//TODO: Display user with picture. Download image and pull out as arrayBuffer().buffer.toString('base64');
+//TODO: Display maybe channel
 Module.register("MMM-Mattermost", {
 	defaults: {
 		animationSpeed: 2000,
@@ -48,20 +48,31 @@ Module.register("MMM-Mattermost", {
 		setInterval(this.rotateMessage.bind(this), this.config.rotationInterval);
 	},
 
+	getIsoDateString(timestamp){
+		let dateString = new Date(timestamp).toISOString().replace("T", " ").replace("Z", " ");
+		let dotIx = dateString.indexOf('.');
+		return dateString.substring(0, dotIx);
+	},
+
 	getDom: function() {
 		let wrapper = document.createElement("div");
-		let labelDataRequest = document.createElement("label");
-		let header = document.createElement("h1");
+		let message = document.createElement("label");
+		let author = document.createElement("div");
+		let header = document.createElement("h2");
 		header.innerHTML = this.config.title;
 
 		if(this.posts !== undefined) {
-			labelDataRequest.innerHTML = this.posts[this.currentMessage].message
+			let post = this.posts.find(p => p.id === this.currentMessage);
+			let dateString = this.getIsoDateString(post.create_at);
+			message.innerHTML = post.message
+			author.innerHTML = "- " + [post.user.first_name, post.user.last_name].join(' ') + " at " + dateString;
 		} else {
-			labelDataRequest.innerHTML = "No mattermost messages found, try modifying your searchterms";
+			message.innerHTML = "No mattermost messages found, try modifying your searchterms";
 		}
 
 		wrapper.appendChild(header);
-		wrapper.appendChild(labelDataRequest);
+		wrapper.appendChild(message);
+		wrapper.appendChild(author);
 
 		return wrapper;
 	},
