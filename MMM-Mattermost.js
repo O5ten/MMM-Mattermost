@@ -58,6 +58,11 @@ Module.register("MMM-Mattermost", {
 		let wrapper = document.createElement("div");
 		let message = document.createElement("label");
 		let author = document.createElement("div");
+		let authorImage = document.createElement("img");
+		let authorText = document.createElement("span");
+		authorText.style = "color: #444; font-size: 14px;"
+		author.appendChild(authorImage);
+		author.appendChild(authorText);
 		let header = document.createElement("h2");
 		header.innerHTML = this.config.title;
 
@@ -65,7 +70,9 @@ Module.register("MMM-Mattermost", {
 			let post = this.posts.find(p => p.id === this.currentMessage);
 			let dateString = this.getIsoDateString(post.create_at);
 			message.innerHTML = post.message
-			author.innerHTML = "- " + [post.user.first_name, post.user.last_name].join(' ') + " at " + dateString;
+			authorImage.style = 'width:15px;height:15px; border-radius:15px;'
+			authorImage.src = "data:image/jpeg;base64, " + post.user.b64;
+			authorText.innerHTML = " " + [post.user.first_name, post.user.last_name].join(' ') + " at " + dateString;
 		} else {
 			message.innerHTML = "No mattermost messages found, try modifying your searchterms";
 		}
