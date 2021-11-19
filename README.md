@@ -17,7 +17,7 @@ You also need to provide some search-terms in `config/config.js` and the module 
 
 |Option|Description|
 |:--|:--|
-|mattermostUrl | **REQUIRED** <br>The url of your mattermost instances|
+|mattermostUrl | **REQUIRED** <br>The url of your mattermost instances<br><br>Type: *string*|
 |accesstoken         |**REQUIRED**<br>A personal access token for your mattermost account<br><br>Type: *string*|
 |teamId              |**REQUIRED**<br>The teamId of the mattermost instance that you want to search messages within<br><br>Type: *string*|
 |searchTerms              |**REQUIRED**<br>The keywords to use to select mattermost messages to display. Be advised all channels and direct messages the user have are searched.<br><br>Type: *string*|
