@@ -1,7 +1,7 @@
 # MMM-Mattermost
 This is a module for [MagicMirror](https://github.com/MichMich/MagicMirror/). It displays announcements from [Mattermost](https://www.mattermost.com).
 
-![Screen Shot](/announcements.png?raw=true "Screen Shot")
+![Screen Shot](/announcement.png?raw=true "Screen Shot")
 
 # Installation
 1. Move to MagicMirror's `modules` directory and clone the repo with<br>
