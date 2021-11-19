@@ -1,35 +1,63 @@
-# MagicMirror-Module-Template
-This is a module to help developers to start building their own modules for the [MagicMirror](https://github.com/MichMich/MagicMirror). 
+# MMM-Mattermost
+This is a module for [MagicMirror](https://github.com/MichMich/MagicMirror/). It displays announcements from [Mattermost](https://www.mattermost.com).
 
-There samples of code for:
-- External request
-- Config parameters
-- Custom URL path route
-- Passing of messages (NOTIFICATIONS)
+![Screen Shot](/announcements.png?raw=true "Screen Shot")
 
-Also this module include tasks for checking your code. For that you need install the developer dependencies.
+# Installation
+1. Move to MagicMirror's `modules` directory and clone the repo with<br>
+`git clone https://github.com/O5ten/MMM-Mattermost.git`
+2. cd into `MMM-Mattermost` and run `npm install`
 
+# Config
+At a minimum, you need a Personal Access Token for Mattermost from the account settings. The mattermost server must be configure to allow this kind of token. But you can probably also use a token for a bot account or use basic auth with your base64-encoded credentials. 
+
+You also need to provide some search-terms in `config/config.js` and the module will search for messages that match those. The ten latest messages matching the searchTerms will be displayed unless you change the `limit`. 
+
+![Screen Shot](/accesstoken.png?raw=true "Personal Access Token")
+
+|Option|Description|
+|:--|:--|
+|mattermostUrl | **REQUIRED** <br>The url of your mattermost instances|
+|accesstoken         |**REQUIRED**<br>A personal access token for your mattermost account<br><br>Type: *string*|
+|teamId              |**REQUIRED**<br>The teamId of the mattermost instance that you want to search messages within<br><br>Type: *string*|
+|searchTerms              |**REQUIRED**<br>The keywords to use to select mattermost messages to display. Be advised all channels and direct messages the user have are searched.<br><br>Type: *string*|
+|isOrSearch              |**REQUIRED**<br>If multiple searchTerms are used then this boolean governs whether it is an OR search or an AND search with those terms. default false<br><br>Type: *boolean*|
+
+## Default config
+```javascript
+    animationSpeed: 2000,
+    updateInterval: 60000,
+    rotationInterval: 15000,
+    retryDelay: 5000,
+    teamId: "",
+    searchTerms: "",
+    accesstoken: "",
+    mattermostUrl: "",
+    limit: 10,
+    title: "Mattermost"
 ```
-cd MI_MODULE_PATH && npm install 
+
+Here is an example of an entry in `config.js`. The id's and tokens are obviously jibberish, but it makes for an easy copy. Get ahold of the teamId by curling the API directly. 
+
+```curl
+curl -H"Authorization: Bearer <PERSONAL_ACCESS_TOKEN>" -H"Content-Type: application/json" https://<my.mattermostserver.org>/api/v4/teams | jq .
 ```
 
-Run the `test` npm script
+```javascript
+{
+        module: "MMM-Mattermost",
+        position: "middle_center",
+        config: {
+                mattermostUrl: "https://my.mattermostserver.org",
+                accesstoken: "8mggde5gztbdplskqlkmklzmlk",
+                teamId: "9fpxdh4fet853ex8s98uf09sowls",
+                searchTerms: "#announcement",
+                isOrSearch: true,
+                title: "Announcements"
+        }
+},
 ```
-npm test
-```
 
-Current Tests:
-- [ESLint](http://eslint.org/) for linting the javascript
-- [stylelint](https://stylelint.io/) for linting the CSS with [stylelint-config-standard](https://github.com/stylelint/stylelint-config-standard) as its base
-- [jsonlint](https://github.com/zaach/jsonlint) for linting the translation files
-- [markdownlint](https://github.com/DavidAnson/markdownlint) for checking the markdown files (`README.md`, `CHANGELOG.md`, `LICENSE.txt`)
-- [js-yaml](https://github.com/nodeca/js-yaml) to lint the `.travis.yml` (run through [grunt-yamllint](https://github.com/geedew/grunt-yamllint))
-
-
-## Installation
-
-`bash -c "$(curl -sL https://raw.githubusercontent.com/roramirez/MagicMirror-Module-Template/master/create_module.sh)"`
-
-This creates a module example to start your development more easy.
-
-If you have any suggest, please let me know [by an issue](https://github.com/roramirez/MagicMirror-Module-Template/issues/new).
+## Dependencies
+This package depends on the following:
+- [cross-fetch](https://www.npmjs.com/package/cross-fetch)

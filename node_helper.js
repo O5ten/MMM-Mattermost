@@ -81,6 +81,7 @@ module.exports = NodeHelper.create({
 				let posts = searchResult.posts;
 				let postIds = Object.keys(posts);
 				let userIds = postIds.map((id) => posts[id].user_id);
+				
 				this.requestMattermostUsers(userIds).then((users) => {
 					this.requestMattermostUserProfilePictures(users).then((imagePromises) => {
 						Promise.all(imagePromises).then((images) => {
@@ -105,7 +106,9 @@ module.exports = NodeHelper.create({
 			console.error(err.message);
 		});
 	},
+
 	base64ArrayBuffer: function(arrayBuffer) {
+		//Function honestly borrowed from here: https://gist.github.com/garylgh/15b36876eb00b876a9c9
 		var base64    = ''
 		var encodings = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 	  

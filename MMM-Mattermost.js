@@ -7,8 +7,6 @@
  * MIT Licensed.
  */
 
-//TODO: Display user with picture. Download image and pull out as arrayBuffer().buffer.toString('base64');
-//TODO: Display maybe channel
 Module.register("MMM-Mattermost", {
 	defaults: {
 		animationSpeed: 2000,
@@ -17,9 +15,9 @@ Module.register("MMM-Mattermost", {
 		retryDelay: 5000,
 		teamId: "",
 		searchTerms: "",
-		channelId: "",
 		limit: 10,
-		title: "Mattermost"
+		title: "Mattermost",
+		accesstoken: ""
 	},
 
 	currentMessage: undefined,
